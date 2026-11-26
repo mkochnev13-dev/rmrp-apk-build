@@ -148,11 +148,14 @@ jobs:
           }
           EOF
 
+          - name: Setup Gradle
+          uses: gradle/actions/setup-gradle@v4
+          with:
+          gradle-version: '8.7'
+
       - name: Build APK
         run: |
-          curl -sL https://gradle.org -o gradle.zip
-          unzip -q gradle.zip
-          ./gradle-8.7/bin/gradle assembleDebug
+          gradle assembleDebug
           cp app/build/outputs/apk/debug/app-debug.apk RMRP_Yurist.apk
 
       - name: Upload APK Artifact

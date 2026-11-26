@@ -75,32 +75,9 @@ jobs:
               }
           }
           EOF
-      - name: Generate Manifest and Java
+           - name: Generate Manifest and Java
         run: |
-          python3 - << 'PY'
-          ns = "http://" + "://android.com"
-          a_main = "android.intent." + "action.MAIN"
-          c_launch = "android.intent." + "category.LAUNCHER"
-          p_net = "android.permission." + "INTERNET"
-          p_mic = "android.permission." + "RECORD_AUDIO"
-          p_aud = "android.permission." + "MODIFY_AUDIO_SETTINGS"
-
-          xml = f'''<?xml version="1.0" encoding="utf-8"?>
-          <manifest xmlns:android="{ns}">
-              <uses-permission android:name="{p_net}" />
-              <uses-permission android:name="{p_mic}" />
-              <uses-permission android:name="{p_aud}" />
-              <application android:label="RMRPЮрист" android:usesCleartextTraffic="true" android:theme="@android:style/Theme.NoTitleBar">
-                  <activity android:name=".MainActivity" android:exported="true" android:configChanges="orientation|screenSize|keyboardHidden">
-                      <intent-filter>
-                          <action android:name="{a_main}" />
-                          <category android:name="{c_launch}" />
-                      </intent-filter>
-                  </activity>
-              </application>
-          </manifest>'''
-          open("app/src/main/AndroidManifest.xml", "w").write(xml)
-          PY
+          python3 -c 'import base64; open("app/src/main/AndroidManifest.xml", "wb").write(base64.b64decode("PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPG1hbmlmZXN0IHhtbG5zOmFuZHJvaWQ9Imh0dHA6Ly9zY2hlbWFzLmFuZHJvaWQuY29tL2Fway9yZXMvYW5kcm9pZCI+CiAgICA8dXNlcy1wZXJtaXNzaW9uIGFuZHJvaWQ6bmFtZT0iYW5kcm9pZC5wZXJtaXNzaW9uLklOVEVSTkVUIiAvPgogICAgPHVzZXMtcGVybWlzc2lvbiBhbmRyb2lkOm5hbWU9ImFuZHJvaWQucGVybWlzc2lvbi5SRUNPUkRfQVVESU8iIC8+CiAgICA8dXNlcy1wZXJtaXNzaW9uIGFuZHJvaWQ6bmFtZT0iYW5kcm9pZC5wZXJtaXNzaW9uLk1PRElGWV9BVURJT19TRVRUSU5HUyIgLz4KICAgIDxhcHBsaWNhdGlvbiBhbmRyb2lkOmxhYmVsPSJSTVJQr9GA0LjRgdGCIiBhbmRyb2lkOnVzZXNDbGVhcnRleHRUcmFmZmljPSJ0cnVlIiBhbmRyb2lkOnRoZW1lPSJAYW5kcm9pZDpzdHlsZS9UaGVtZS5Ob1RpdGxlQmFyIj4KICAgICAgICA8YWN0aXZpdHkgYW5kcm9pZDpuYW1lPSIuTWFpbkFjdGl2aXR5IiBhbmRyb2lkOmV4cG9ydGVkPSJ0cnVlIiBhbmRyb2lkOmNvbmZpZ0NoYW5nZXM9Im9yaWVudGF0aW9ufHNjcmVlblNpemV8a2V5Ym9hcmRIaWRkZW4iPgogICAgICAgICAgICA8aW50ZW50LWZpbHRlcj4KICAgICAgICAgICAgICAgIDxhY3Rpb24gYW5kcm9pZDpuYW1lPSJhbmRyb2lkLmludGVudC5hY3Rpb24uTUFJTiIgLz4KICAgICAgICAgICAgICAgIDxjYXRlZ29yeSBhbmRyb2lkOm5hbWU9ImFuZHJvaWQuaW50ZW50LmNhdGVnb3J5LkxBVU5DSEVSIiAvPgogICAgICAgICAgICA8L2ludGVudC1maWx0ZXI+CiAgICAgICAgPC9hY3Rpdml0eT4KICAgIDwvYXBwbGljYXRpb24+CjwvbWFuaWZlc3Q+"))'
 
           cat << 'EOF' > app/src/main/java/com/rmrp/yurist/MainActivity.java
           package com.rmrp.yurist;
@@ -150,6 +127,7 @@ jobs:
               }
           }
           EOF
+
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4

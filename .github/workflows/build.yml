@@ -75,30 +75,26 @@ jobs:
               }
           }
           EOF
-      - name: Generate App Code
+      - name: Generate Manifest and Java
         run: |
-          cat << 'EOF' > app/src/main/AndroidManifest.xml
-          <?xml version="1.0" encoding="utf-8"?>
-          <manifest xmlns:android="http://android.com">
+          python3 -c '
+          ns = "http://" + "://android.com"
+          manifest = f"""<?xml version="1.0" encoding="utf-8"?>
+          <manifest xmlns:android="{ns}">
               <uses-permission android:name="android.permission.INTERNET" />
               <uses-permission android:name="android.permission.RECORD_AUDIO" />
               <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-              <application
-                  android:label="RMRPЮрист"
-                  android:usesCleartextTraffic="true"
-                  android:theme="@android:style/Theme.NoTitleBar">
-                  <activity
-                      android:name=".MainActivity"
-                      android:exported="true"
-                      android:configChanges="orientation|screenSize|keyboardHidden">
+              <application android:label="RMRPЮрист" android:usesCleartextTraffic="true" android:theme="@android:style/Theme.NoTitleBar">
+                  <activity android:name=".MainActivity" android:exported="true" android:configChanges="orientation|screenSize|keyboardHidden">
                       <intent-filter>
                           <action android:name="android.intent.action.MAIN" />
                           <category android:name="android.intent.category.LAUNCHER" />
                       </intent-filter>
                   </activity>
               </application>
-          </manifest>
-          EOF
+          </manifest>"""
+          open("app/src/main/AndroidManifest.xml", "w").write(manifest)
+          '
 
           cat << 'EOF' > app/src/main/java/com/rmrp/yurist/MainActivity.java
           package com.rmrp.yurist;

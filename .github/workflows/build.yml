@@ -24,9 +24,8 @@ jobs:
       - name: Generate Android Project
         run: |
           mkdir -p app/src/main/java/com/rmrp/yurist
-          mkdir -p app/src/main/res/values
 
-                    cat << 'EOF' > settings.gradle
+          cat << 'EOF' > settings.gradle
           pluginManagement {
               repositories {
                   google()
@@ -35,7 +34,7 @@ jobs:
               }
           }
           dependencyResolutionManagement {
-              repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+              repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
               repositories {
                   google()
                   mavenCentral()
@@ -45,19 +44,21 @@ jobs:
           include ':app'
           EOF
 
-
           cat << 'EOF' > build.gradle
-          buildscript {
-              repositories { google(); mavenCentral() }
-              dependencies { classpath 'com.android.tools.build:gradle:8.1.4' }
-          }
-          allprojects {
-              repositories { google(); mavenCentral() }
+          plugins {
+              id 'com.android.application' version '8.3.2' apply false
           }
           EOF
 
+          cat << 'EOF' > gradle.properties
+          android.useAndroidX=true
+          org.gradle.jvmargs=-Xmx2048m
+          EOF
+
           cat << 'EOF' > app/build.gradle
-          plugins { id 'com.android.application' }
+          plugins {
+              id 'com.android.application'
+          }
           android {
               namespace 'com.rmrp.yurist'
               compileSdk 34
@@ -68,8 +69,9 @@ jobs:
                   versionCode 1
                   versionName "2.0"
               }
-              buildTypes {
-                  release { minifyEnabled false }
+              compileOptions {
+                  sourceCompatibility JavaVersion.VERSION_17
+                  targetCompatibility JavaVersion.VERSION_17
               }
           }
           EOF
@@ -148,7 +150,7 @@ jobs:
 
       - name: Build APK
         run: |
-          gradle wrapper --gradle-version 8.2
+          gradle wrapper --gradle-version 8.7
           ./gradlew assembleDebug
           cp app/build/outputs/apk/debug/app-debug.apk RMRP_Yurist.apk
 

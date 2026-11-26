@@ -21,7 +21,7 @@ jobs:
       - name: Accept Android Licenses
         run: yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null || true
 
-      - name: Generate Android Project
+      - name: Generate Gradle Configs
         run: |
           mkdir -p app/src/main/java/com/rmrp/yurist
 
@@ -75,7 +75,8 @@ jobs:
               }
           }
           EOF
-
+      - name: Generate App Code
+        run: |
           cat << 'EOF' > app/src/main/AndroidManifest.xml
           <?xml version="1.0" encoding="utf-8"?>
           <manifest xmlns:android="http://android.com">
@@ -148,9 +149,9 @@ jobs:
           }
           EOF
 
-          - name: Setup Gradle
-          uses: gradle/actions/setup-gradle@v4
-          with:
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
           gradle-version: '8.7'
 
       - name: Build APK
